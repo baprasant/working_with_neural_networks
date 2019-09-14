@@ -27,7 +27,7 @@ When working with images, the best approach is a CNN (Convolutional Neural Netwo
 For sequencial images, one approach is using ConvLSTM layers. It is a Recurrent layer, just like the LSTM, but internal matrix multiplications are exchanged with convolution operations. As a result, the data that flows through the ConvLSTM cells keeps the input dimension (3D in our case) instead of being just a 1D vector with features.
 
 ## Dataset
-The dataset that is made available in HARDataset folder is the accelerometer data. 2.56 seconds of timeframe is considered as one window. Each window has 128 time steps. 
+The dataset that is made available in HARDataset folder is the accelerometer data. 2.56 seconds of timeframe is considered as one window. Each window has 128 time steps. This data is used by different networks to recognise human activity and to classify them into 6 classes.
 
 ## Understanding Epochs and Batch size
 ### Batch
