@@ -29,6 +29,18 @@ For sequencial images, one approach is using ConvLSTM layers. It is a Recurrent 
 ## Dataset
 The dataset that is made available in HARDataset folder is the accelerometer data. 2.56 seconds of timeframe is considered as one window. Each window has 128 time steps. 
 
+## Understanding Epochs and Batch size
+### Batch
+The batch size is a hyperparameter that defines the number of samples to work through before updating the internal model parameters.
+
+Think of a batch as a for-loop iterating over one or more samples and making predictions. At the end of the batch, the predictions are compared to the expected output variables and an error is calculated. From this error, the update algorithm is used to improve the model, e.g. move down along the error gradient.
+### Epoch
+One epoch means that each sample in the training dataset has had an opportunity to update the internal model parameters. An epoch is comprised of one or more batches. For example, as above, an epoch that has one batch is called the batch gradient descent learning algorithm.
+
+You can think of a for-loop over the number of epochs where each loop proceeds over the training dataset. Within this for-loop is another nested for-loop that iterates over each batch of samples, where one batch has the specified “batch size” number of samples.
+
+The number of epochs is traditionally large, often hundreds or thousands, allowing the learning algorithm to run until the error from the model has been sufficiently minimized. You may see examples of the number of epochs in the literature and in tutorials set to 10, 100, 500, 1000, and larger.
+
 ## LSTM Neural Network
 In this network, each window has 128 time steps. The whole dataset was passed through 15 times. The number of times the experiment has to be repeated can be modified by modifying 
 ```run_experiment(repeats=1)```
@@ -47,19 +59,12 @@ This networ is designed similar to the earlier one. In this network as well, eac
 
 To run this script use: ```python3 run_experiment_convlstm2d.py```
 
-## Understanding Epochs and Batch size
-### Batch
-The batch size is a hyperparameter that defines the number of samples to work through before updating the internal model parameters.
-
-Think of a batch as a for-loop iterating over one or more samples and making predictions. At the end of the batch, the predictions are compared to the expected output variables and an error is calculated. From this error, the update algorithm is used to improve the model, e.g. move down along the error gradient.
-### Epoch
-One epoch means that each sample in the training dataset has had an opportunity to update the internal model parameters. An epoch is comprised of one or more batches. For example, as above, an epoch that has one batch is called the batch gradient descent learning algorithm.
-
-You can think of a for-loop over the number of epochs where each loop proceeds over the training dataset. Within this for-loop is another nested for-loop that iterates over each batch of samples, where one batch has the specified “batch size” number of samples.
-
-The number of epochs is traditionally large, often hundreds or thousands, allowing the learning algorithm to run until the error from the model has been sufficiently minimized. You may see examples of the number of epochs in the literature and in tutorials set to 10, 100, 500, 1000, and larger.
-
-
+## Installing Depedencies
+Run the below command before running any of the scripts
+```
+sudo chmod a+x install_dependencies.sh
+sudo ./install_dependencies.sh
+```
 
 ## References
 1. https://medium.com/neuronio/an-introduction-to-convlstm-55c9025563a7
