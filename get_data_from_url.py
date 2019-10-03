@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import os
 
-def get_train_dataset_from_url(url):
-	# url = 'https://pokemondb.net/pokedex/all'
+def get_train_dataset_from_url(url,action):
+	actions_dict = {'HAND_WAVE' : '1','LEG_WAVE'  : '2'}
+	print('\nGetting Training Data for:' + action)
 	html = requests.get(url).content
 	df_list = pd.read_html(html)
 	df = df_list[-1]
@@ -98,4 +99,7 @@ def get_train_dataset_from_url(url):
 	for i in range(len(column9)):
 		file.write(str(column9[i]) + ' ')
 	file.write('\n')
+	file.close()
+	file = open("url_data/train/output.txt", "a")
+	file.write(actions_dict[action]+'\n')
 	file.close()
