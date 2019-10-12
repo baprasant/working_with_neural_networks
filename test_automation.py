@@ -14,7 +14,7 @@ time_steps = 100
 reset_url = 'http://172.20.10.10:8266/RESET'
 data_url = 'http://172.20.10.10:8266/HOME'
 action = 'HAND_WAVE'
-no_of_repetitions = 10
+no_of_repetitions = 48
 for each_time in tqdm.trange(no_of_repetitions,desc = 'Data Collection Progress', leave = False):
     print('Requesting Reset')
     request_url_silently(reset_url)
