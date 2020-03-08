@@ -102,7 +102,13 @@ def evaluate_model(trainX, trainy, testX, testy):
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
 	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
-
+	print('shape of trainX:')
+	print(trainX.shape)
+	print('n_timesteps, n_features, n_output')
+	print(n_timesteps) # 128
+	print(n_features) # 9
+	print( n_outputs) # 6
+	model.summary()
 	y_pred = model.predict_classes(testX[0:10], verbose = 0)
 	print("x_pred[0]:")
 	print(testX[0])
