@@ -22,39 +22,39 @@ def get_train_dataset_from_url(url,action):
 	##Column 1
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column1.append(lol[row_number][0])
+	    column1.append(lol[row_number][1])
 	##Column 2
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column2.append(lol[row_number][1])
+	    column2.append(lol[row_number][2])
 	##Column 3
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column3.append(lol[row_number][2])
+	    column3.append(lol[row_number][3])
 	##Column 4
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column4.append(lol[row_number][3])
+	    column4.append(lol[row_number][4])
 	##Column 5
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column5.append(lol[row_number][4])
+	    column5.append(lol[row_number][5])
 	##Column 6
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column6.append(lol[row_number][5])
+	    column6.append(lol[row_number][6])
 	##Column 7
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column7.append(lol[row_number][6])
+	    column7.append(lol[row_number][7])
 	##Column 8
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column8.append(lol[row_number][7])
+	    column8.append(lol[row_number][8])
 	##Column 9
 	number_of_rows, number_of_columns = np.shape(lol)
 	for row_number in range(number_of_rows):
-	    column9.append(lol[row_number][8])
+	    column9.append(lol[row_number][9])
 	file = open("url_data/train/column1.txt", "a")
 	for i in range(len(column1)):
 		file.write(str(column1[i]) + ' ')
