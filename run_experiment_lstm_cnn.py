@@ -66,7 +66,7 @@ def load_dataset(prefix=''):
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
 	# define model
-	verbose, epochs, batch_size = 0, 25, 64
+	verbose, epochs, batch_size = 1, 4, 64
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	# reshape data into time steps of sub-sequences
 	n_steps, n_length = 4, 32
@@ -78,26 +78,22 @@ def evaluate_model(trainX, trainy, testX, testy):
 	print(trainX.shape)
 	print('shape of trainy:')
 	print(trainy.shape)
-	model.add(TimeDistributed(Conv1D(filters=64, kernel_size=3, activation='relu'), input_shape=(None,n_length,n_features)))
-	model.add(TimeDistributed(Conv1D(filters=64, kernel_size=3, activation='relu')))
-	model.add(TimeDistributed(Dropout(0.5)))
+	model.add(TimeDistributed(Conv1D(filters=32, kernel_size=3, strides = 1, activation='relu'), input_shape=(None,n_length,n_features)))
+	# model.add(TimeDistributed(Dropout(0.5)))
 	model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
 	model.add(TimeDistributed(Flatten()))
-	model.add(LSTM(100))
-	model.add(Dropout(0.5))
+	model.add(LSTM(50))
+	# model.add(Dropout(0.5))
 	model.add(Dense(100, activation='relu'))
 	model.add(Dense(n_outputs, activation='softmax'))
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
-	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
-
-	y_pred = model.predict_classes(testX[0:10], verbose = 0)
-	print("x_pred[0]:")
-	print(testX[0])
-	print("y_pred_class:")
-	print(y_pred[0])
+	print('Evaluating...')
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
+	print('Predicting...')
+	y_pred = model.predict_classes(testX[0:10], verbose = 1)
 	return accuracy
 
 # summarize scores

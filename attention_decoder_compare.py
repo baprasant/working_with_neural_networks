@@ -11,8 +11,8 @@ from attention_decoder import AttentionDecoder
 
 # generate a sequence of random integers
 def generate_sequence(length, n_unique):
-	print('[randint(0, n_unique-1) for _ in range(length)]:')
-	print([randint(0, n_unique-1) for _ in range(length)])
+	# print('[randint(0, n_unique-1) for _ in range(length)]:')
+	# print([randint(0, n_unique-1) for _ in range(length)])
 	return [randint(0, n_unique-1) for _ in range(length)]
 
 # one hot encode sequence
@@ -26,8 +26,8 @@ def one_hot_encode(sequence, n_unique):
 
 # decode a one hot encoded string
 def one_hot_decode(encoded_seq):
-	print('[argmax(vector) for vector in encoded_seq]:')
-	print([argmax(vector) for vector in encoded_seq])
+	# print('[argmax(vector) for vector in encoded_seq]:')
+	# print([argmax(vector) for vector in encoded_seq])
 	return [argmax(vector) for vector in encoded_seq]
 
 # prepare data for the LSTM
@@ -41,6 +41,7 @@ def get_pair(n_in, n_out, cardinality):
 	# reshape as 3D
 	X = X.reshape((1, X.shape[0], X.shape[1]))
 	y = y.reshape((1, y.shape[0], y.shape[1]))
+	"""
 	print('X.shape:')
 	print(X.shape)
 	print('y.shape:')
@@ -49,6 +50,7 @@ def get_pair(n_in, n_out, cardinality):
 	print(X)
 	print('y:')
 	print(y)
+	"""
 	return X,y
 
 # define the encoder-decoder model
@@ -78,19 +80,23 @@ def train_evaluate_model(model, n_timesteps_in, n_timesteps_out, n_features):
 		# generate new random sequence
 		X,y = get_pair(n_timesteps_in, n_timesteps_out, n_features)
 		# fit model for one epoch on this sequence
+		"""
 		print('X.shape:')
 		print(X.shape)
 		print('y.shape:')
 		print(y.shape)
-		model.fit(X, y, epochs=1, verbose=1)
+		"""
+		model.fit(X, y, epochs=1, verbose=0)
 	# evaluate LSTM
 	total, correct = 100, 0
 	for _ in range(total):
 		X,y = get_pair(n_timesteps_in, n_timesteps_out, n_features)
+		"""
 		print('X:')
 		print(X)
 		print('y:')
 		print(y)
+		"""
 		yhat = model.predict(X, verbose=1)
 		if array_equal(one_hot_decode(y[0]), one_hot_decode(yhat[0])):
 			correct += 1
@@ -100,7 +106,7 @@ def train_evaluate_model(model, n_timesteps_in, n_timesteps_out, n_features):
 n_features = 50
 n_timesteps_in = 5
 n_timesteps_out = 2
-n_repeats = 1
+n_repeats = 10
 # evaluate encoder-decoder model
 print('Encoder-Decoder Model')
 results = list()

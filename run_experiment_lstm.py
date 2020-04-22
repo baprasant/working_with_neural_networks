@@ -61,14 +61,14 @@ def load_dataset(prefix=''):
 
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
-	verbose, epochs, batch_size = 0, 15, 64
+	verbose, epochs, batch_size = 1, 10, 64
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	model = Sequential()
 	print('n_timesteps, n_features, n_output')
 	print(n_timesteps) # 128
 	print(n_features) # 9
 	print( n_outputs) # 6
-	model.add(LSTM(100, input_shape=(n_timesteps,n_features)))
+	model.add(LSTM(70, input_shape=(n_timesteps,n_features)))
 	model.add(Dropout(0.5))
 	model.add(Dense(100, activation='relu'))
 	model.add(Dense(n_outputs, activation='softmax'))
@@ -76,8 +76,10 @@ def evaluate_model(trainX, trainy, testX, testy):
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
-	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
-	y_pred = model.predict_classes(testX[0:10], verbose = 0)
+	print('Evaluating...')
+	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
+	print('Predicting...')
+	y_pred = model.predict_classes(testX[0:10], verbose = 1)
 	print("x_pred[0]:")
 	print(testX[0])
 	print("y_pred_class:")
