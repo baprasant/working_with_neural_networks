@@ -82,7 +82,6 @@ def evaluate_model(trainX, trainy, testX, testy):
 	model.add(Bidirectional(LSTM(100, input_shape=(n_timesteps,n_features))))
 	model.add(Dense(100, activation='relu'))
 	model.add(Dense(n_outputs, activation='softmax'))
-	# model.summary()
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
@@ -95,6 +94,7 @@ def evaluate_model(trainX, trainy, testX, testy):
 	print(testX[0])
 	print("y_pred_class:")
 	print(y_pred[0])
+	model.summary()
 	return accuracy
 
 # summarize scores
