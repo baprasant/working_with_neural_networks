@@ -10,6 +10,17 @@ from keras.layers import LSTM
 from keras.utils import to_categorical
 from matplotlib import pyplot
 
+from random import randint
+from numpy import array
+from numpy import argmax
+from numpy import array_equal
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+from keras.layers import TimeDistributed
+from keras.layers import RepeatVector
+from attention_decoder import AttentionDecoder
+
 # load a single file as a numpy array
 def load_file(filepath):
 	dataframe = read_csv(filepath, header=None, delim_whitespace=True)
@@ -68,10 +79,26 @@ def evaluate_model(trainX, trainy, testX, testy):
 	print(n_timesteps) # 128
 	print(n_features) # 9
 	print( n_outputs) # 6
+	"""
 	model.add(LSTM(70, input_shape=(n_timesteps,n_features)))
-	model.add(Dropout(0.5))
+	model.summary()
+	model.add(AttentionDecoder(50, n_features))
+	# model.add(Dropout(0.5))
+
 	model.add(Dense(100, activation='relu'))
 	model.add(Dense(n_outputs, activation='softmax'))
+	model.summary()
+	"""
+	# model = Sequential()
+	# model.add(LSTM(150, input_shape=(n_timesteps, n_features)))
+	# model.add(AttentionDecoder(150, n_features))
+	# model.add(Dense(100, activation='relu'))
+	# model.add(Dense(n_outputs, activation='softmax'))
+	model.add(LSTM(100, input_shape=(n_timesteps,n_features)))
+	# model.add(AttentionDecoder(150, n_features))
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	model.summary()
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)

@@ -14,6 +14,18 @@ from keras.layers.convolutional import MaxPooling1D
 from keras.utils import to_categorical
 from matplotlib import pyplot
 
+from random import randint
+from numpy import array
+from numpy import argmax
+from numpy import array_equal
+from keras.models import Sequential
+from keras.layers import LSTM
+from keras.layers import Dense
+from keras.layers import TimeDistributed
+from keras.layers import RepeatVector
+from attention_decoder import AttentionDecoder
+
+
 # load a single file as a numpy array
 def load_file(filepath):
 	dataframe = read_csv(filepath, header=None, delim_whitespace=True)
@@ -79,13 +91,19 @@ def evaluate_model(trainX, trainy, testX, testy):
 	print('shape of trainy:')
 	print(trainy.shape)
 	model.add(TimeDistributed(Conv1D(filters=32, kernel_size=3, strides = 1, activation='relu'), input_shape=(None,n_length,n_features)))
-	# model.add(TimeDistributed(Dropout(0.5)))
+	model.add(TimeDistributed(Conv1D(filters=32, kernel_size=3, strides = 1, activation='relu')))
+	model.add(TimeDistributed(Dropout(0.5)))
 	model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
 	model.add(TimeDistributed(Flatten()))
 	model.add(LSTM(50))
+	# model.summary()
+	# model.add(AttentionDecoder(50, n_features))	
 	# model.add(Dropout(0.5))
+	model.summary()
 	model.add(Dense(100, activation='relu'))
+	model.summary()
 	model.add(Dense(n_outputs, activation='softmax'))
+	model.summary()
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)

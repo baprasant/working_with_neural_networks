@@ -34,7 +34,11 @@ def one_hot_decode(encoded_seq):
 def get_pair(n_in, n_out, cardinality):
 	# generate random sequence
 	sequence_in = generate_sequence(n_in, cardinality)
-	sequence_out = sequence_in[:n_out] + [0 for _ in range(n_in-n_out)]
+	print("sequence_in")
+	print(sequence_in)
+	sequence_out = [0 for _ in range(n_in-n_out)]  + sequence_in[:n_out]
+	print("sequence_out")
+	print(sequence_out)
 	# one hot encode
 	X = one_hot_encode(sequence_in, cardinality)
 	y = one_hot_encode(sequence_out, cardinality)
@@ -69,6 +73,7 @@ def attention_model(n_timesteps_in, n_features):
 	model = Sequential()
 	model.add(LSTM(150, input_shape=(n_timesteps_in, n_features), return_sequences=True))
 	model.add(AttentionDecoder(150, n_features))
+	model.summary()
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 	return model
 
@@ -76,17 +81,22 @@ def attention_model(n_timesteps_in, n_features):
 def train_evaluate_model(model, n_timesteps_in, n_timesteps_out, n_features):
 	# train_evaluate_model(model, 5, 2, 50):
 	# train LSTM
-	for epoch in range(5000):
+	for epoch in range(500):
 		# generate new random sequence
 		X,y = get_pair(n_timesteps_in, n_timesteps_out, n_features)
 		# fit model for one epoch on this sequence
-		"""
+
 		print('X.shape:')
 		print(X.shape)
 		print('y.shape:')
 		print(y.shape)
-		"""
-		model.fit(X, y, epochs=1, verbose=0)
+
+		print('X:')
+		print(X)
+		print('y:')
+		print(y)
+
+		model.fit(X, y, epochs=1, verbose=1)
 	# evaluate LSTM
 	total, correct = 100, 0
 	for _ in range(total):
@@ -103,10 +113,11 @@ def train_evaluate_model(model, n_timesteps_in, n_timesteps_out, n_features):
 	return float(correct)/float(total)*100.0
 
 # configure problem
-n_features = 50
+n_features = 9
 n_timesteps_in = 5
-n_timesteps_out = 2
-n_repeats = 10
+n_timesteps_out = 1 # 2
+n_repeats = 1
+"""
 # evaluate encoder-decoder model
 print('Encoder-Decoder Model')
 results = list()
@@ -116,6 +127,7 @@ for _ in range(n_repeats):
 	results.append(accuracy)
 	print(accuracy)
 print('Mean Accuracy: %.2f%%' % (sum(results)/float(n_repeats)))
+"""
 # evaluate encoder-decoder with attention model
 print('Encoder-Decoder With Attention Model')
 results = list()
