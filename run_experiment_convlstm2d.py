@@ -65,7 +65,7 @@ def load_dataset(prefix=''):
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
 	# define model
-	verbose, epochs, batch_size = 0, 25, 64
+	verbose, epochs, batch_size = 1, 10, 64
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	# reshape into subsequences (samples, time steps, rows, cols, channels)
 	n_steps, n_length = 4, 32
@@ -83,11 +83,8 @@ def evaluate_model(trainX, trainy, testX, testy):
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
 	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=0)
-	y_pred = model.predict_classes(testX[0:10], verbose = 0)
-	print("x_pred[0]:")
-	print(testX[0])
-	print("y_pred_class:")
-	print(y_pred[0])
+	y_pred = model.predict_classes(testX[0:10], verbose = 1)
+	model.summary()
 	return accuracy
 
 # summarize scores

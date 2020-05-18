@@ -9,7 +9,7 @@ from keras.layers import Flatten
 from keras.layers import Dropout
 from keras.layers import LSTM
 from keras.layers import TimeDistributed
-from keras.layers.convolutional import Conv1D
+from keras.layers.convolutional import Conv1D, SeparableConv1D
 from keras.layers.convolutional import MaxPooling1D
 from keras.utils import to_categorical
 from matplotlib import pyplot
@@ -82,8 +82,8 @@ def evaluate_model(trainX, trainy, testX, testy):
 	verbose, epochs, batch_size = 1, 10, 32
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	model = Sequential()
-	model.add(Conv1D(filters=128, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
-	# model.add(Conv1D(filters=128, kernel_size=3, activation='relu'))
+	model.add(SeparableConv1D(filters=128, kernel_size=3, activation='relu', input_shape=(n_timesteps,n_features)))
+	# model.add(SeparableConv1D(filters=128, kernel_size=3, activation='relu'))
 	model.add(Dropout(0.5))
 	model.add(MaxPooling1D(pool_size=2))
 	model.add(Flatten())
