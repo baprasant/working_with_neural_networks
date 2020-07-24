@@ -99,7 +99,7 @@ def evaluate_model(trainX, trainy, testX, testy):
 	sheet1.write(row_number, 5, 'TDV ACC')
 	sheet1.write(row_number, 6, 'MODEL SIZE')
 	sheet1.write(row_number, 7, 'TRAINING TIME')
-	sheet1.write(row_number, 7, 'BATCH SIZE')
+	sheet1.write(row_number, 8, 'BATCH SIZE')
 	for ep in range(1,11):
 		# print('With ep:')
 		# print(ep)
