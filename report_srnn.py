@@ -11,6 +11,8 @@ from keras.utils import to_categorical
 from matplotlib import pyplot
 import os
 import time
+import xlwt
+from xlwt import Workbook
 
 from random import randint
 from numpy import array
@@ -85,7 +87,19 @@ def load_dataset(prefix=''):
 
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
-	for ep in range(1,10):
+	row_number = 0
+	wb = Workbook()
+	# add_sheet is used to create sheet.
+	sheet1 = wb.add_sheet('Simple RNN Observations')
+	sheet1.write(row_number, 0, 'EPOCH')
+	sheet1.write(row_number, 1, 'HIDDEN LAYERS')
+	sheet1.write(row_number, 2, 'ACC AT FIRST EPOCH')
+	sheet1.write(row_number, 3, 'ACC AT LAST EPOCH')
+	sheet1.write(row_number, 4, 'CV ACC')
+	sheet1.write(row_number, 5, 'TDV ACC')
+	sheet1.write(row_number, 6, 'MODEL SIZE')
+	sheet1.write(row_number, 7, 'TRAINING TIME')
+	for ep in range(1,11):
 		# print('With ep:')
 		# print(ep)
 		verbose, epochs, batch_size = 2, ep, 64
@@ -119,6 +133,7 @@ def evaluate_model(trainX, trainy, testX, testy):
 			# y_pred = model.predict_classes(testX[0:10], verbose = 1)
 			model.save("current_model.h5")
 			print("Saved model to disk")
+			f_size = file_size("current_model.h5")
 			print("File size in bytes of model: ",file_size("current_model.h5"))
 			os.system('rm current_model.h5')
 			"""
@@ -131,28 +146,44 @@ def evaluate_model(trainX, trainy, testX, testy):
 			score_tdv = accuracy_tdv * 100.0
 			# score = score * 100.0
 			r = 0
-			print('>#%d: %.3f' % (r+1, score_cv))
-			print('>#%d: %.3f' % (r+1, score_tdv))
+			# print('>#%d: %.3f' % (r+1, score_cv))
+			# print('>#%d: %.3f' % (r+1, score_tdv))
 			scores_cv.append(score_cv)
 			scores_tdv.append(score_tdv)
 			# summarize results
-			summarize_results_cv(scores_cv)
-			summarize_results_tdv(scores_tdv)
+			acc_cv = summarize_results_cv(scores_cv)
+			acc_tdv = summarize_results_tdv(scores_tdv)
 			training_time = sum(time_callback.times)
 			print('Training Time:'+str(training_time))
+			acc_at_last_epoch = history.history['accuracy'][-1]*100
+			print('Accuracy at Last Epoch:'+str(acc_at_last_epoch))
+			acc_at_first_epoch = history.history['accuracy'][0]*100
+			print('Accuracy at First Epoch:'+str(acc_at_first_epoch))
+			row_number = row_number + 1
+			sheet1.write(row_number, 0, ep)
+			sheet1.write(row_number, 1, hidden_layers)
+			sheet1.write(row_number, 2, acc_at_first_epoch)
+			sheet1.write(row_number, 3, acc_at_last_epoch)
+			sheet1.write(row_number, 4, acc_cv)
+			sheet1.write(row_number, 5, acc_tdv)
+			sheet1.write(row_number, 6, f_size)
+			sheet1.write(row_number, 7, training_time)
 			print('-------------------------------------------------------------------')
+	wb.save('SRNN_REPORT.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
 	print(scores)
 	m, s = mean(scores), std(scores)
 	print('Accuracy for CV: %.3f%% (+/-%.3f)' % (m, s))
+	return m
 
 # summarize scores
 def summarize_results_tdv(scores):
 	print(scores)
 	m, s = mean(scores), std(scores)
 	print('Accuracy for TDV: %.3f%% (+/-%.3f)' % (m, s))
+	return m
 
 # run an experiment
 def run_experiment(repeats=1):
