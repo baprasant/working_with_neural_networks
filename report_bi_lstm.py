@@ -86,7 +86,7 @@ def evaluate_model(trainX, trainy, testX, testy):
 	row_number = 0
 	wb = Workbook()
 	# add_sheet is used to create sheet.
-	sheet1 = wb.add_sheet('LSTM Observations')
+	sheet1 = wb.add_sheet('BI-LSTM Observations')
 	sheet1.write(row_number, 0, 'EPOCH')
 	sheet1.write(row_number, 1, 'HIDDEN LAYERS')
 	sheet1.write(row_number, 2, 'ACC AT FIRST EPOCH')
@@ -162,7 +162,7 @@ def evaluate_model(trainX, trainy, testX, testy):
     			sheet1.write(row_number, 7, training_time)
                 sheet1.write(row_number, 8, batch_size_)
 			    print('-------------------------------------------------------------------')
-	wb.save('LSTM_REPORT.xls')
+	wb.save('BI_LSTM_REPORT.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
