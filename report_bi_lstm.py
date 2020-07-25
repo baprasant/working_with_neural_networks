@@ -6,7 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Dropout
-from keras.layers import LSTM
+from keras.layers import LSTM, Bidirectional
 from keras.utils import to_categorical
 from matplotlib import pyplot
 import os
@@ -103,7 +103,7 @@ def evaluate_model(trainX, trainy, testX, testy):
 	for ep in range(1,11):
 		# print('With ep:')
 		# print(ep)
-		batch_sizes = [8,16,32,64]
+		batch_sizes = [64]
 		for batch_size_ in batch_sizes:
 			verbose, epochs, batch_size = 2, ep, batch_size_
 			n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
