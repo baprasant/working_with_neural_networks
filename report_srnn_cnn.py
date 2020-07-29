@@ -108,7 +108,7 @@ def evaluate_model(trainX, trainy, testX, testy):
     n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
     trainX = trainX.reshape((trainX.shape[0], n_steps, n_length, n_features))
     testX = testX.reshape((testX.shape[0], n_steps, n_length, n_features))
-    for ep in range(10,11):
+    for ep in range(9,11):
         # print('With ep:')
         # print(ep)
         filters_ = [16, 32, 64]
@@ -116,7 +116,7 @@ def evaluate_model(trainX, trainy, testX, testy):
         for stride_ in strides_:
             for filter_ in filters_:
                 verbose, epochs= 2, ep
-                batch_size_ = 64
+                batch_size_ = 32
                 # print('n_timesteps, n_features, n_output')
                 # print(n_timesteps) # 128
                 # print(n_features) # 9
@@ -191,7 +191,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('SRNN_CNN_REPORT_BS_64_e_10.xls')
+    wb.save('SRNN_CNN_REPORT_BS_32_e_9_10.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
