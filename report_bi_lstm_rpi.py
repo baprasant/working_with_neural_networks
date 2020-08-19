@@ -45,8 +45,8 @@ def load_file(filepath):
 def load_group(filenames, prefix=''):
     loaded = list()
     for name in filenames:
-    data = load_file(prefix + name)
-    loaded.append(data)
+        data = load_file(prefix + name)
+        loaded.append(data)
     # stack group so that features are the 3rd dimension
     loaded = dstack(loaded)
     return loaded
@@ -102,81 +102,81 @@ def evaluate_model(trainX, trainy, testX, testy):
     sheet1.write(row_number, 8, 'BATCH SIZE')
     ep_values = [7,9]
     for ep in ep_values: # for ep in range(1,11):
-    # print('With ep:')
-    # print(ep)
-    batch_sizes = [64]
-    for batch_size_ in batch_sizes:
-    verbose, epochs, batch_size = 2, ep, batch_size_
-    n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
-    # print('n_timesteps, n_features, n_output')
-    # print(n_timesteps) # 128
-    # print(n_features) # 9
-    # print( n_outputs) # 6
+        # print('With ep:')
+        # print(ep)
+        batch_sizes = [64]
+        for batch_size_ in batch_sizes:
+            verbose, epochs, batch_size = 2, ep, batch_size_
+            n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+            # print('n_timesteps, n_features, n_output')
+            # print(n_timesteps) # 128
+            # print(n_features) # 9
+            # print( n_outputs) # 6
             h_l_values = [20,40,60]
-    for hidden_layers in h_l_values: # for hidden_layers in range(10,110,10):
-    scores_cv = list()
-    scores_tdv = list()
-    # print('With hidden_layers:')
-    # print(hidden_layers)
-    print('-------------------------------------------------------------------')
-    print('Number of Epochs:'+str(ep))
-    print('Number of Hidden Layers: '+str(hidden_layers))
-    print('Batch Size:'+str(batch_size_))
-    model = Sequential()
-    model.add(Bidirectional(LSTM(hidden_layers, input_shape=(n_timesteps,n_features))))
-    model.add(Dense(100, activation='relu'))
-    model.add(Dense(n_outputs, activation='softmax'))
-    #  model.summary()
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    # fit network
-    time_callback = TimeHistory()
-    history = model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose, callbacks=[time_callback])
-    # evaluate model
-    print('Cross Validation...')
-    _, accuracy_cv = model.evaluate(trainX, trainy, batch_size=batch_size, verbose=2)
-    print('Test Data Validation...')
-    _, accuracy_tdv = model.evaluate(testX, testy, batch_size=batch_size, verbose=2)
-    # print('Predicting...')
-    # y_pred = model.predict_classes(testX[0:10], verbose = 1)
-    # model.save("current_model.h5")
+            for hidden_layers in h_l_values: # for hidden_layers in range(10,110,10):
+                scores_cv = list()
+                scores_tdv = list()
+                # print('With hidden_layers:')
+                # print(hidden_layers)
+                print('-------------------------------------------------------------------')
+                print('Number of Epochs:'+str(ep))
+                print('Number of Hidden Layers: '+str(hidden_layers))
+                print('Batch Size:'+str(batch_size_))
+                model = Sequential()
+                model.add(Bidirectional(LSTM(hidden_layers, input_shape=(n_timesteps,n_features))))
+                model.add(Dense(100, activation='relu'))
+                model.add(Dense(n_outputs, activation='softmax'))
+                #  model.summary()
+                model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+                # fit network
+                time_callback = TimeHistory()
+                history = model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose, callbacks=[time_callback])
+                # evaluate model
+                print('Cross Validation...')
+                _, accuracy_cv = model.evaluate(trainX, trainy, batch_size=batch_size, verbose=2)
+                print('Test Data Validation...')
+                _, accuracy_tdv = model.evaluate(testX, testy, batch_size=batch_size, verbose=2)
+                # print('Predicting...')
+                # y_pred = model.predict_classes(testX[0:10], verbose = 1)
+                # model.save("current_model.h5")
                 # print("Saved model to disk")
-                # f_size = 'NA'
+                # f_size = file_size("current_model.h5")
                 # print("File size in bytes of model: ",file_size("current_model.h5"))
                 # os.system('rm current_model.h5')
-    """
-    print("x_pred[0]:")
-    print(testX[0])
-    print("y_pred_class:")
-    print(y_pred[0])
-    """
-    score_cv = accuracy_cv * 100.0
-    score_tdv = accuracy_tdv * 100.0
-    # score = score * 100.0
-    r = 0
-    # print('>#%d: %.3f' % (r+1, score_cv))
-    # print('>#%d: %.3f' % (r+1, score_tdv))
-    scores_cv.append(score_cv)
-    scores_tdv.append(score_tdv)
-    # summarize results
-    acc_cv = summarize_results_cv(scores_cv)
-    acc_tdv = summarize_results_tdv(scores_tdv)
-    training_time = sum(time_callback.times)
-    print('Training Time:'+str(training_time))
-    acc_at_last_epoch = history.history['accuracy'][-1]*100
-    print('Accuracy at Last Epoch:'+str(acc_at_last_epoch))
-    acc_at_first_epoch = history.history['accuracy'][0]*100
-    print('Accuracy at First Epoch:'+str(acc_at_first_epoch))
-    row_number = row_number + 1
-    sheet1.write(row_number, 0, ep)
-    sheet1.write(row_number, 1, hidden_layers)
-    sheet1.write(row_number, 2, acc_at_first_epoch)
-    sheet1.write(row_number, 3, acc_at_last_epoch)
-    sheet1.write(row_number, 4, acc_cv)
-    sheet1.write(row_number, 5, acc_tdv)
-    sheet1.write(row_number, 6, 'NA')
-    sheet1.write(row_number, 7, training_time)
-    sheet1.write(row_number, 8, batch_size_)
-    print('-------------------------------------------------------------------')
+                """
+                print("x_pred[0]:")
+                print(testX[0])
+                print("y_pred_class:")
+                print(y_pred[0])
+                """
+                score_cv = accuracy_cv * 100.0
+                score_tdv = accuracy_tdv * 100.0
+                # score = score * 100.0
+                r = 0
+                # print('>#%d: %.3f' % (r+1, score_cv))
+                # print('>#%d: %.3f' % (r+1, score_tdv))
+                scores_cv.append(score_cv)
+                scores_tdv.append(score_tdv)
+                # summarize results
+                acc_cv = summarize_results_cv(scores_cv)
+                acc_tdv = summarize_results_tdv(scores_tdv)
+                training_time = sum(time_callback.times)
+                print('Training Time:'+str(training_time))
+                acc_at_last_epoch = history.history['accuracy'][-1]*100
+                print('Accuracy at Last Epoch:'+str(acc_at_last_epoch))
+                acc_at_first_epoch = history.history['accuracy'][0]*100
+                print('Accuracy at First Epoch:'+str(acc_at_first_epoch))
+                row_number = row_number + 1
+                sheet1.write(row_number, 0, ep)
+                sheet1.write(row_number, 1, hidden_layers)
+                sheet1.write(row_number, 2, acc_at_first_epoch)
+                sheet1.write(row_number, 3, acc_at_last_epoch)
+                sheet1.write(row_number, 4, acc_cv)
+                sheet1.write(row_number, 5, acc_tdv)
+                sheet1.write(row_number, 6, 'NA')
+                sheet1.write(row_number, 7, training_time)
+                sheet1.write(row_number, 8, batch_size_)
+                print('-------------------------------------------------------------------')
     wb.save('BI_LSTM_REPORT_RPI.xls')
 
 # summarize scores
@@ -199,7 +199,7 @@ def run_experiment(repeats=1):
     trainX, trainy, testX, testy = load_dataset()
     # repeat experiment
     for r in range(repeats):
-    evaluate_model(trainX, trainy, testX, testy)
+        evaluate_model(trainX, trainy, testX, testy)
 
 def file_size(fname):
         statinfo = os.stat(fname)
