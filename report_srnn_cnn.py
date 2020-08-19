@@ -108,20 +108,22 @@ def evaluate_model(trainX, trainy, testX, testy):
     n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
     trainX = trainX.reshape((trainX.shape[0], n_steps, n_length, n_features))
     testX = testX.reshape((testX.shape[0], n_steps, n_length, n_features))
-    for ep in range(9,11):
+    ep_values = [10]
+    for ep in ep_values: # for ep in range(9,11):
         # print('With ep:')
         # print(ep)
-        filters_ = [16, 32, 64]
-        strides_ = [1,5]
+        filters_ = [32]
+        strides_ = [1]
         for stride_ in strides_:
             for filter_ in filters_:
                 verbose, epochs= 2, ep
-                batch_size_ = 32
+                batch_size_ = 64
                 # print('n_timesteps, n_features, n_output')
                 # print(n_timesteps) # 128
                 # print(n_features) # 9
                 # print( n_outputs) # 6
-                for hidden_layers in range(20,60,10):
+                h_l_values = [20]
+                for hidden_layers in h_l_values: # for hidden_layers in range(20,60,10):
                     scores_cv = list()
                     scores_tdv = list()
                     # print('With hidden_layers:')
@@ -191,7 +193,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('SRNN_CNN_REPORT_BS_32_e_9_10.xls')
+    wb.save('SRNN_CNN_REPORT_RPI.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

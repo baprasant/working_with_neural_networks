@@ -6,7 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Dropout
-from keras.layers import LSTM
+from keras.layers import LSTM, Bidirectional
 from keras.utils import to_categorical
 from matplotlib import pyplot
 import os
@@ -92,7 +92,7 @@ def evaluate_model(trainX, trainy, testX, testy):
     row_number = 0
     wb = Workbook()
     # add_sheet is used to create sheet.
-    sheet1 = wb.add_sheet('LSTM And CNN Observations')
+    sheet1 = wb.add_sheet('Bi-LSTM And CNN Observations')
     sheet1.write(row_number, 0, 'EPOCH')
     sheet1.write(row_number, 1, 'HIDDEN LAYERS')
     sheet1.write(row_number, 2, 'ACC AT FIRST EPOCH')
@@ -108,21 +108,21 @@ def evaluate_model(trainX, trainy, testX, testy):
     n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
     trainX = trainX.reshape((trainX.shape[0], n_steps, n_length, n_features))
     testX = testX.reshape((testX.shape[0], n_steps, n_length, n_features))
-    ep_values = [7]
-    for ep in ep_values: # for ep in range(7,11):
+    ep_values = [10]
+    for ep in ep_values: # for ep in range(10,11):
         # print('With ep:')
         # print(ep)
-        filters_ = [32]
-        strides_ = [1,5]
+        filters_ = [16]
+        strides_ = [1]
         for stride_ in strides_:
             for filter_ in filters_:
                 verbose, epochs= 2, ep
-                batch_size_ = 32
+                batch_size_ = 64
                 # print('n_timesteps, n_features, n_output')
                 # print(n_timesteps) # 128
                 # print(n_features) # 9
                 # print( n_outputs) # 6
-                for hidden_layers in range(20,60,20):
+                for hidden_layers in range(20,30,10):
                     scores_cv = list()
                     scores_tdv = list()
                     # print('With hidden_layers:')
@@ -136,7 +136,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     model.add(TimeDistributed(Conv1D(filters=filter_, kernel_size=3, strides = stride_, activation='relu'), input_shape=(None,n_length,n_features)))
                     model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
                     model.add(TimeDistributed(Flatten()))
-                    model.add(LSTM(hidden_layers))
+                    model.add(Bidirectional(LSTM(hidden_layers)))
                     model.add(Dense(100, activation='relu'))
                     model.add(Dense(n_outputs, activation='softmax'))
                     #  model.summary()
@@ -192,7 +192,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('LSTM_CNN_REPORT_BS_32_RPI.xls')
+    wb.save('BI_LSTM_CNN_REPORT_BS_64_RPI.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

@@ -108,16 +108,16 @@ def evaluate_model(trainX, trainy, testX, testy):
     n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
     trainX = trainX.reshape((trainX.shape[0], n_steps, n_length, n_features))
     testX = testX.reshape((testX.shape[0], n_steps, n_length, n_features))
-    ep_values = [7]
+    ep_values = [9]
     for ep in ep_values: # for ep in range(7,11):
         # print('With ep:')
         # print(ep)
-        filters_ = [32]
-        strides_ = [1,5]
+        filters_ = [16,32]
+        strides_ = [1]
         for stride_ in strides_:
             for filter_ in filters_:
                 verbose, epochs= 2, ep
-                batch_size_ = 32
+                batch_size_ = 64
                 # print('n_timesteps, n_features, n_output')
                 # print(n_timesteps) # 128
                 # print(n_features) # 9
@@ -192,7 +192,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('LSTM_CNN_REPORT_BS_32_RPI.xls')
+    wb.save('LSTM_CNN_REPORT_BS_64_RPI.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
