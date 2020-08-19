@@ -154,7 +154,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     # y_pred = model.predict_classes(testX[0:10], verbose = 1)
                     # model.save("current_model.h5")
                     # print("Saved model to disk")
-                    f_size = 'NA'
+                    # f_size = 'NA'
                     # print("File size in bytes of model: ",file_size("current_model.h5"))
                     # os.system('rm current_model.h5')
                     """
@@ -187,7 +187,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 3, acc_at_last_epoch)
                     sheet1.write(row_number, 4, acc_cv)
                     sheet1.write(row_number, 5, acc_tdv)
-                    sheet1.write(row_number, 6, f_size)
+                    sheet1.write(row_number, 6, 'NA')
                     sheet1.write(row_number, 7, training_time)
                     sheet1.write(row_number, 8, filter_)
                     sheet1.write(row_number, 9, stride_)
