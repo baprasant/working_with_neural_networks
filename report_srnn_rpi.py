@@ -175,7 +175,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                 sheet1.write(row_number, 7, training_time)
                 sheet1.write(row_number, 8, batch_size_)
                 print('-------------------------------------------------------------------')
-    wb.save('SRNN_REPORT_RPI.xls')
+    wb.save('SRNN_REPORT_RPI4.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

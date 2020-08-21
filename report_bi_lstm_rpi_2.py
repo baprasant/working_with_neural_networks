@@ -177,7 +177,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                 sheet1.write(row_number, 7, training_time)
                 sheet1.write(row_number, 8, batch_size_)
                 print('-------------------------------------------------------------------')
-    wb.save('BI_LSTM_REPORT_RPI_2.xls')
+    wb.save('BI_LSTM_REPORT_RPI4_2.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

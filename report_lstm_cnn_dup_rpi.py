@@ -192,7 +192,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('LSTM_CNN_REPORT_BS_64_RPI.xls')
+    wb.save('LSTM_CNN_REPORT_BS_64_RPI4.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
