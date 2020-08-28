@@ -30,7 +30,7 @@ class HARAPP(object):
         self.testy = None
         self.model = None
         real_time_data = None
-        self.epochs=10
+        self.epochs=3
         self.batch_size=32
         self.verbose=1
         self.filters=32
