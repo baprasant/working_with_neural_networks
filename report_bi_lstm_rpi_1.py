@@ -100,7 +100,7 @@ def evaluate_model(trainX, trainy, testX, testy):
     sheet1.write(row_number, 6, 'MODEL SIZE')
     sheet1.write(row_number, 7, 'TRAINING TIME')
     sheet1.write(row_number, 8, 'BATCH SIZE')
-    ep_values = [7]
+    ep_values = [9]
     for ep in ep_values: # for ep in range(1,11):
         # print('With ep:')
         # print(ep)
@@ -112,7 +112,7 @@ def evaluate_model(trainX, trainy, testX, testy):
             # print(n_timesteps) # 128
             # print(n_features) # 9
             # print( n_outputs) # 6
-            h_l_values = [60]
+            h_l_values = [20]
             for hidden_layers in h_l_values: # for hidden_layers in range(10,110,10):
                 scores_cv = list()
                 scores_tdv = list()
@@ -177,7 +177,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                 sheet1.write(row_number, 7, training_time)
                 sheet1.write(row_number, 8, batch_size_)
                 print('-------------------------------------------------------------------')
-    wb.save('BI_LSTM_REPORT_RPI4_1.xls')
+    wb.save('BI_LSTM_REPORT_RPI3_WHS_9e_20h.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

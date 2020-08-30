@@ -103,7 +103,7 @@ def evaluate_model(trainX, trainy, testX, testy):
     for ep in range(5,6):
         # print('With ep:')
         # print(ep)
-        batch_sizes = [32,64]
+        batch_sizes = [32]
         for batch_size_ in batch_sizes:
             verbose, epochs, batch_size = 2, ep, batch_size_
             n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
@@ -111,7 +111,7 @@ def evaluate_model(trainX, trainy, testX, testy):
             # print(n_timesteps) # 128
             # print(n_features) # 9
             # print( n_outputs) # 6
-            for hidden_layers in range(30,70,20):
+            for hidden_layers in range(30,50,20):
                 scores_cv = list()
                 scores_tdv = list()
                 # print('With hidden_layers:')
@@ -175,7 +175,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                 sheet1.write(row_number, 7, training_time)
                 sheet1.write(row_number, 8, batch_size_)
                 print('-------------------------------------------------------------------')
-    wb.save('SRNN_REPORT_RPI4.xls')
+    wb.save('SRNN_REPORT_RPI3_WHS.xls')
 
 # summarize scores
 def summarize_results_cv(scores):

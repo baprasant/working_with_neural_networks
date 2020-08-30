@@ -113,7 +113,7 @@ def evaluate_model(trainX, trainy, testX, testy):
         # print('With ep:')
         # print(ep)
         filters_ = [32]
-        strides_ = [1,5]
+        strides_ = [5]
         for stride_ in strides_:
             for filter_ in filters_:
                 verbose, epochs= 2, ep
@@ -122,7 +122,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                 # print(n_timesteps) # 128
                 # print(n_features) # 9
                 # print( n_outputs) # 6
-                for hidden_layers in range(20,60,20):
+                for hidden_layers in range(40,60,20):
                     scores_cv = list()
                     scores_tdv = list()
                     # print('With hidden_layers:')
@@ -192,7 +192,7 @@ def evaluate_model(trainX, trainy, testX, testy):
                     sheet1.write(row_number, 9, stride_)
                     sheet1.write(row_number, 10, batch_size_)
                     print('-------------------------------------------------------------------')
-    wb.save('LSTM_CNN_REPORT_BS_32_RPI4.xls')
+    wb.save('LSTM_CNN_REPORT_BS_32_RPI3_WHS.xls')
 
 # summarize scores
 def summarize_results_cv(scores):
