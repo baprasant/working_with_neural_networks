@@ -1,0 +1,17 @@
+***********************************************
+The experiment contains a series of robotic movement scaled in the order of 1 to 10 
+with Action 1 being the first motion and Action 10 being the last.
+
+The file is indicated as AC_x_1 to AC_x_50 where x=1 to 10 is the scaled robot movement.
+Each action contains 50 trials with 10 seconds recording. There may be a small variation 
+in data recording.
+
+Each excell sheet contains Timestamp, Sensor id , Value 0, Value 1 and Value 2 where 
+Sensor Id 1 refers to accelerometer
+Sensor id 2 refers to Gyroscope
+Sensor id 3 refers to Mangetometer
+Value 0 refers to X-axis 
+Value 1 refers to Y-axis
+Value 2 refers to Z-axis
+
+***********************************************
