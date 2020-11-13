@@ -127,18 +127,6 @@ def run_experiment(repeats=1):
 	# load data
 	trainX, trainy, testX, testy = load_dataset()
 	# repeat experiment
-	print('trainX.shape')
-	print(trainX.shape)
-	print('trainy.shape')
-	print(trainy.shape)
-	print('testX.shape')
-	print(testX.shape)
-	print('testy.shape')
-	print(testy.shape)
-	print(testX[1])
-	print('testX[1]')
-	print(testy[1])
-	print('testy[1]')
 	scores = list()
 	for r in range(repeats):
 		score = evaluate_model(trainX, trainy, testX, testy)
