@@ -21,6 +21,9 @@ from keras.layers import TimeDistributed
 from keras.layers import RepeatVector
 from attention_decoder import AttentionDecoder
 
+import tensorflow as tf
+
+
 # load a single file as a numpy array
 def load_file(filepath):
 	dataframe = read_csv(filepath, header=None, delim_whitespace=True)
@@ -72,7 +75,7 @@ def load_dataset(prefix=''):
 
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
-	verbose, epochs, batch_size = 1, 10, 64
+	verbose, epochs, batch_size = 1, 1, 64
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	model = Sequential()
 	print('n_timesteps, n_features, n_output')
@@ -99,19 +102,35 @@ def evaluate_model(trainX, trainy, testX, testy):
 	model.add(Dense(100, activation='relu'))
 	model.add(Dense(n_outputs, activation='softmax'))
 	model.summary()
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', tf.keras.metrics.Precision(), tf.keras.metrics.Recall(), tf.keras.metrics.TruePositives(), tf.keras.metrics.TrueNegatives(), tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()])
+
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
 	print('Evaluating...')
-	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
-	print('Predicting...')
-	y_pred = model.predict_classes(testX[0:10], verbose = 1)
-	print("x_pred[0]:")
-	print(testX[0])
-	print("y_pred_class:")
-	print(y_pred[0])
-	return accuracy
+	print(model.metrics_names)
+	# ['loss', 'accuracy', 'precision', 'recall', 'true_positives', 'true_negatives', 'false_positives', 'false_negatives']
+	metrics_ = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
+	print(metrics_)
+	loss = metrics_[0]
+	accuracy  = metrics_[1]
+	precision = metrics_[2]
+	recall = metrics_[3]
+	true_positives  = metrics_[4]
+	true_negatives  = metrics_[5]
+	false_positives  = metrics_[6]
+	false_negatives = metrics_[7]
+	print('Precision:')
+	print(precision)
+	print('Recall:')
+	print(recall)
+	print('Accuracy:')
+	print((true_positives+true_negatives)/(true_positives+true_negatives+false_negatives+false_positives))
+	print('Specificity:')
+	print((true_negatives)/(false_positives+true_negatives))
+	print('Sensitivity:')
+	print((true_positives)/(true_positives+false_negatives))
+	return metrics_[1]
 
 # summarize scores
 def summarize_results(scores):

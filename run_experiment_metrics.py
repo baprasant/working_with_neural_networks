@@ -1,4 +1,3 @@
-# cnn lstm model
 from numpy import mean
 from numpy import std
 from numpy import dstack
@@ -7,7 +6,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Dropout
-from keras.layers import LSTM
+from keras.layers import SimpleRNN, LSTM, Bidirectional
 from keras.layers import TimeDistributed
 from keras.layers.convolutional import Conv1D
 from keras.layers.convolutional import MaxPooling1D
@@ -24,6 +23,9 @@ from keras.layers import Dense
 from keras.layers import TimeDistributed
 from keras.layers import RepeatVector
 from attention_decoder import AttentionDecoder
+
+import tensorflow as tf
+
 
 # load a single file as a numpy array
 def load_file(filepath):
@@ -46,24 +48,24 @@ def load_dataset_group(group, prefix=''):
 	# load all 9 files as a single array
 	filenames = list()
 	# total acceleration
-	filenames += ['sensor_1_x.txt', 'sensor_1_y.txt', 'sensor_1_z.txt']
+	filenames += ['total_acc_x_'+group+'.txt', 'total_acc_y_'+group+'.txt', 'total_acc_z_'+group+'.txt']
 	# body acceleration
-	filenames += ['sensor_2_x.txt', 'sensor_2_y.txt', 'sensor_2_z.txt']
+	filenames += ['body_acc_x_'+group+'.txt', 'body_acc_y_'+group+'.txt', 'body_acc_z_'+group+'.txt']
 	# body gyroscope
-	# filenames += ['sensor_1_x.txt', 'sensor_1_x.txt', 'sensor_1_x.txt']
+	filenames += ['body_gyro_x_'+group+'.txt', 'body_gyro_y_'+group+'.txt', 'body_gyro_z_'+group+'.txt']
 	# load input data
 	X = load_group(filenames, filepath)
 	# load class output
-	y = load_file(prefix + group + '/output.txt')
+	y = load_file(prefix + group + '/y_'+group+'.txt')
 	return X, y
 
 # load the dataset, returns train and test X and y elements
 def load_dataset(prefix=''):
 	# load all train
-	trainX, trainy = load_dataset_group('train', prefix + 'OURDataset/')
+	trainX, trainy = load_dataset_group('train', prefix + 'HARDataset/')
 	print(trainX.shape, trainy.shape)
 	# load all test
-	testX, testy = load_dataset_group('test', prefix + 'OURDataset/')
+	testX, testy = load_dataset_group('test', prefix + 'HARDataset/')
 	print(testX.shape, testy.shape)
 	# zero-offset class values
 	trainy = trainy - 1
@@ -74,11 +76,17 @@ def load_dataset(prefix=''):
 	print(trainX.shape, trainy.shape, testX.shape, testy.shape)
 	return trainX, trainy, testX, testy
 
-
 # fit and evaluate a model
 def evaluate_model(trainX, trainy, testX, testy):
-	# define model
-	verbose, epochs, batch_size = 1, 10, 64
+	'''
+	verbose, epochs, batch_size = 1, 9, 64
+	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
+	model = Sequential()
+	model.add(Bidirectional(LSTM(20, input_shape=(n_timesteps,n_features))))
+	model.add(Dense(100, activation='relu'))
+	model.add(Dense(n_outputs, activation='softmax'))
+	'''
+	verbose, epochs, batch_size = 1, 10, 32
 	n_timesteps, n_features, n_outputs = trainX.shape[1], trainX.shape[2], trainy.shape[1]
 	# reshape data into time steps of sub-sequences
 	n_steps, n_length = 4, 32
@@ -86,29 +94,41 @@ def evaluate_model(trainX, trainy, testX, testy):
 	testX = testX.reshape((testX.shape[0], n_steps, n_length, n_features))
 	# define model
 	model = Sequential()
-	model.add(TimeDistributed(Conv1D(filters=128, kernel_size=3, strides = 1, activation='relu'), input_shape=(None,n_length,n_features)))
-	# model.add(TimeDistributed(Conv1D(filters=32, kernel_size=3, strides = 1, activation='relu')))
-	# model.add(TimeDistributed(Dropout(0.5)))
+	model.add(TimeDistributed(Conv1D(filters=16, kernel_size=3, strides = 5, activation='relu'), input_shape=(None,n_length,n_features)))
 	model.add(TimeDistributed(MaxPooling1D(pool_size=2)))
 	model.add(TimeDistributed(Flatten()))
-	model.add(LSTM(100))
-	# model.summary()
-	# model.add(AttentionDecoder(50, n_features))
-	# model.add(Dropout(0.5))
-	model.summary()
+	model.add(Bidirectional(LSTM(20)))
 	model.add(Dense(100, activation='relu'))
-	model.summary()
 	model.add(Dense(n_outputs, activation='softmax'))
-	model.summary()
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy', tf.keras.metrics.Precision(), tf.keras.metrics.Recall(), tf.keras.metrics.TruePositives(), tf.keras.metrics.TrueNegatives(), tf.keras.metrics.FalsePositives(), tf.keras.metrics.FalseNegatives()])
+	# model.summary()
 	# fit network
 	model.fit(trainX, trainy, epochs=epochs, batch_size=batch_size, verbose=verbose)
 	# evaluate model
 	print('Evaluating...')
-	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
-	print('Predicting...')
-	y_pred = model.predict_classes(testX[0:10], verbose = 1)
-	return accuracy
+	print(model.metrics_names)
+	# ['loss', 'accuracy', 'precision', 'recall', 'true_positives', 'true_negatives', 'false_positives', 'false_negatives']
+	metrics_ = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
+	print(metrics_)
+	loss = metrics_[0]
+	accuracy  = metrics_[1]
+	precision = metrics_[2]
+	recall = metrics_[3]
+	true_positives  = metrics_[4]
+	true_negatives  = metrics_[5]
+	false_positives  = metrics_[6]
+	false_negatives = metrics_[7]
+	print('Precision:')
+	print(precision)
+	print('Recall:')
+	print(recall)
+	print('Accuracy:')
+	print((true_positives+true_negatives)/(true_positives+true_negatives+false_negatives+false_positives))
+	print('Specificity:')
+	print((true_negatives)/(false_positives+true_negatives))
+	print('Sensitivity:')
+	print((true_positives)/(true_positives+false_negatives))
+	return metrics_[1]
 
 # summarize scores
 def summarize_results(scores):
@@ -121,6 +141,18 @@ def run_experiment(repeats=1):
 	# load data
 	trainX, trainy, testX, testy = load_dataset()
 	# repeat experiment
+	print('trainX.shape')
+	print(trainX.shape)
+	print('trainy.shape')
+	print(trainy.shape)
+	print('testX.shape')
+	print(testX.shape)
+	print('testy.shape')
+	print(testy.shape)
+	print(testX[1])
+	print('testX[1]')
+	print(testy[1])
+	print('testy[1]')
 	scores = list()
 	for r in range(repeats):
 		score = evaluate_model(trainX, trainy, testX, testy)
@@ -129,6 +161,7 @@ def run_experiment(repeats=1):
 		scores.append(score)
 	# summarize results
 	summarize_results(scores)
+
 
 # run the experiment
 run_experiment()

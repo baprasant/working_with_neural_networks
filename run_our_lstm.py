@@ -90,13 +90,18 @@ def evaluate_model(trainX, trainy, testX, testy):
 	# evaluate model
 	_, accuracy = model.evaluate(testX, testy, batch_size=batch_size, verbose=1)
 	model.summary()
-	y_pred = model.predict_classes(testX[0:10], verbose = 1)
-	print("x_pred[0]:")
-	print(testX[0])
-	print("y_pred_class:")
-	print(y_pred[0])
-	print('testy[0]:')
-	print(testy[0])
+	y_pred = model.predict_classes(testX, verbose = 1)
+	y_pred = y_pred[:0]
+	'''
+	print('ACCURACY')
+	print(accuracy_score(testy, y_pred))
+	print('PRECISION')
+	print(precision_score(testy, y_pred))
+	print('RECALL')
+	print(recall_score(testy, y_pred))
+	print('F1 SCORE')
+	print(f1_score(testy, p_pred))
+	'''
 	return accuracy
 
 # summarize scores
